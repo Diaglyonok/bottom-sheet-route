@@ -45,12 +45,13 @@ class _MyHomePageState extends State<MyHomePage> {
               onPressed: () {
                 Navigator.of(context).push(
                   BottomSheetRoute(
-                      child: const Material(
-                    child: SizedBox(
-                      height: 400,
-                      child: Center(child: Text("Here is Bottom sheet")),
+                    builder: (context) => const Material(
+                      child: SizedBox(
+                        height: 400,
+                        child: Center(child: Text("Here is Bottom sheet")),
+                      ),
                     ),
-                  )),
+                  ),
                 );
               },
               child: const Text('Open Bottom Sheet'),

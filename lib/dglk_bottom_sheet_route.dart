@@ -4,19 +4,21 @@ import 'package:flutter/material.dart';
 
 class BottomSheetRoute<T> extends ModalRoute<T> {
   BottomSheetRoute({
-    this.child,
+    required this.builder,
     this.bottomSheetController,
     this.color,
     this.showGrip,
     this.gripColor,
+    this.titleBoxHeight,
   });
   bool isPopped = false;
 
-  final Widget? child;
+  final Widget Function(BuildContext context) builder;
   final BottomSheetController? bottomSheetController;
   final Color? color;
   final Color? gripColor;
   final bool? showGrip;
+  final double? titleBoxHeight;
 
   @override
   Future<RoutePopDisposition> willPop() {
@@ -49,8 +51,7 @@ class BottomSheetRoute<T> extends ModalRoute<T> {
   bool get semanticsDismissible => true;
 
   @override
-  Widget buildPage(
-      BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
+  Widget buildPage(BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
     if (bottomSheetController != null) {
       bottomSheetController!.registerListener(() {
         if (!isPopped) {
@@ -77,8 +78,7 @@ class BottomSheetRoute<T> extends ModalRoute<T> {
             child: Column(
               children: <Widget>[
                 ClipRRect(
-                  borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(24), topRight: Radius.circular(24)),
+                  borderRadius: const BorderRadius.only(topLeft: Radius.circular(24), topRight: Radius.circular(24)),
                   child: Container(
                     color: color ?? Theme.of(context).colorScheme.background,
                     constraints: BoxConstraints(
@@ -96,11 +96,10 @@ class BottomSheetRoute<T> extends ModalRoute<T> {
   }
 
   @override
-  Widget buildTransitions(BuildContext context, Animation<double> animation,
-      Animation<double> secondaryAnimation, Widget child) {
+  Widget buildTransitions(
+      BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
     return SlideTransition(
-      position:
-          Tween<Offset>(begin: const Offset(0, 1), end: const Offset(0, 0)).animate(animation),
+      position: Tween<Offset>(begin: const Offset(0, 1), end: const Offset(0, 0)).animate(animation),
       child: child,
     );
   }
@@ -109,7 +108,7 @@ class BottomSheetRoute<T> extends ModalRoute<T> {
     return Column(mainAxisSize: MainAxisSize.min, children: [
       GestureDetector(
           child: Container(
-            height: 36,
+            height: titleBoxHeight ?? 36,
             padding: const EdgeInsets.only(bottom: 12),
             color: Colors.transparent,
             child: Align(
@@ -133,7 +132,12 @@ class BottomSheetRoute<T> extends ModalRoute<T> {
               Navigator.of(context).pop();
             }
           }),
-      Flexible(child: child!),
+      Flexible(
+        child: Material(
+          type: MaterialType.transparency,
+          child: builder(context),
+        ),
+      ),
     ]);
   }
 }
