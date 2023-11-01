@@ -108,8 +108,7 @@ class BottomSheetRoute<T> extends ModalRoute<T> {
     return Column(mainAxisSize: MainAxisSize.min, children: [
       GestureDetector(
           child: Container(
-            height: titleBoxHeight ?? 36,
-            padding: const EdgeInsets.only(bottom: 12),
+            height: titleBoxHeight ?? 20,
             color: Colors.transparent,
             child: Align(
               alignment: Alignment.center,
